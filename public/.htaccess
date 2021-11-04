@@ -1,0 +1,38 @@
+<Files .htaccess>
+order allow,deny
+deny from all
+</Files>
+
+<IfModule mod_rewrite.c>
+    Options +FollowSymLinks
+    RewriteEngine on
+
+#############################################################
+    # Process heading code #
+#############################################################
+
+    # force https in the browser (but not on localhost)
+    RewriteCond %{REMOTE_ADDR} !^127\.0\.0\.1
+    RewriteCond %{REMOTE_ADDR} !^::1
+    RewriteCond %{REMOTE_HOST} !^127\.0\.0\.1
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+#############################################################
+    # Begin custom rewrites for the app #
+#############################################################
+
+    # tags and searching
+    #RewriteRule ^tag/(.*)/?$ ./browse/tag.php?tag=$1 [NC]
+
+#############################################################
+    # Hide .html extensions in the browser #
+#############################################################
+
+    # hide .html extensions
+    RewriteCond %{REQUEST_URI} !/$
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}.html -f
+    RewriteRule ^(.*) $1\.html [L]
+
+</IfModule>
