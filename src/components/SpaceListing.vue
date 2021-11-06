@@ -4,7 +4,7 @@
         <h3 class="text-lg font-semibold text-center">No Spaces were found...</h3>
     </div>
 
-    <pagination :currentPage="currentPage" :pages="totalPages" @page-changed="paginate" />
+    <pagination v-if:="totalPages > 1" :currentPage="currentPage" :pages="totalPages" @page-changed="paginate" />
 
     <section class="mt-5 space-y-4" v-for="space in $store.state.spaces.slice( start, start+perPage)" :key="space.id">
 

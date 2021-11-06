@@ -61,12 +61,13 @@
       // create the default searchQuery 
       //  load the most popular spaces onto the home page when it is mounted (aka loaded)
       const searchQuery = {
-          text: 'nft',
-          per_page: 10,
+        method: 'top',
+        // text: 'nft',
+        // per_page: 10,
       };
 
       // async call for the 'searchSpaces' action using the searchQuery
-      // this.$store.dispatch('searchSpaces', searchQuery);
+      this.$store.dispatch('searchSpaces', searchQuery);
       
     },
   };

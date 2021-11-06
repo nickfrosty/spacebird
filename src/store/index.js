@@ -116,11 +116,16 @@ export default createStore({
     },
   },
   actions: {
-    async searchSpaces( state, searchQuery ){
+    async searchSpaces( state, searchQuery = null ){
         this.commit('setLoading', true);
         this.commit('setResponseText', ''); // empty the response text
 
-        const API_ADDR = `${process.env.VUE_APP_API_ADDR}/spaces/search/?text=${searchQuery.text}`;
+        let API_ADDR;
+
+        if (searchQuery !== null && searchQuery !== undefined && searchQuery.text !== undefined)
+          API_ADDR = `${process.env.VUE_APP_API_ADDR}/spaces/search/?text=${searchQuery.text}`;
+        else
+          API_ADDR = `${process.env.VUE_APP_API_ADDR}/spaces`;
         // console.log('API_ADDR: ' + API_ADDR);
         // console.log('searching for: ' + searchQuery.text);
         

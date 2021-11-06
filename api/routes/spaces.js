@@ -61,27 +61,35 @@ function validateQuery( query ){
 /*
     Retreive the most recent saved Spaces (aka load the Spaces homepage)
 */
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
+    let spaces = [];
+    let users = [];
+
+    let tmp = await getTopSpaces();
+    spaces = tmp.spaces.slice(0, 10);
+    users = tmp.users;
+
+    // ensure at least some spaces were found
+    if ( !spaces || spaces.length <= 0 ){
+        res.status(200).send(new Payload({ 
+            message: 'No top spaces found...',
+        }));
+        return;
+    }
     
-    
+    // create the payload
+    let payload = new Payload({
+        status: true,
+        message: 'Top live spaces',
+        data: {
+            spaces: spaces,
+            users: users,
+        }
+    });
 
-    // console.log(ratePerMin);
-    // console.log(ratePerSec);
-    // console.log(now);
-    // console.log(lastTwitterCall);
+    // send the response from the server
+    res.status(200).send(payload);
 
-    // perform the input validation on the req.query
-    // const { error } = validateQuery(req.query)
-    // if ( error ){
-    //     return res.status(400).send(new Payload({ 
-    //         message: error.details[0].message 
-    //     }));
-    // }
-
-    // init the payload
-    let payload = new Payload({message:'Welcome to Spaces'});
-
-    res.send(payload);
 });
 
 /*
@@ -155,6 +163,17 @@ router.get("/search", async (req, res) => {
 
 });
 
+/* Get top search results */
+async function getTopSpaces(){
+
+    const { spaces, userSearch } = await searchElasticSpaces();
+    
+    const users = await searchElasticUsers( userSearch );
+
+    return { spaces, users };
+}
+
+/* Search for any spaces saved in elastic */
 async function searchElastic( searchQuery ){
     
     // save the search query
@@ -167,14 +186,15 @@ async function searchElastic( searchQuery ){
     return { spaces, users };
 }
 
-async function searchElasticSpaces( searchQuery ){
+async function searchElasticSpaces( searchQuery = null ){
     let spaces = [];
     let userSearch = [];
 
-    await elastic.search({
-        "from" : 0, "size" : 100, // max of 100 results returned
-        index: "spaces",
-        body: {
+    let bodyData;
+
+    // enable searching for a specific query string
+    if ( searchQuery !== null ){
+        bodyData = {
             sort: [
                 { "participant_count": { "order": "desc" } },
                 { "created_at": { "order": "desc" } },
@@ -184,7 +204,23 @@ async function searchElasticSpaces( searchQuery ){
                     "title": `*${searchQuery.text.trim()}*`
                 }
             },
-        }
+        };
+    }
+    // default to showing the topi live spaces
+    else{
+        bodyData = {
+            sort: [
+                { "participant_count": { "order": "desc" } },
+                { "created_at": { "order": "desc" } },
+            ],
+        };
+    }
+
+
+    await elastic.search({
+        "from" : 0, "size" : 100, // max of 100 results returned
+        index: "spaces",
+        body: bodyData,
     })
     .then(response => {
         // console.log('search spaces: complete');
@@ -278,9 +314,6 @@ function saveSpacesToElastic( spaces ){
     // loop through each of the spaces
     for (const key in spaces) {
         let space = spaces[key];
-
-        if (space.id == '1MnxnkqbYqBKO')
-            space.participant_count = 999;
 
         if ( !space.speaker_ids )
             space.speaker_ids = [];

@@ -22,6 +22,6 @@ deny from all
     # Begin custom rewrites for the app #
 #############################################################
 
-# REWRITERULE ^(.*)$ http://localhost:5000/$1 [P]
+#REWRITERULE ^(.*)$ http://localhost:5000/$1 [P]
 
 </IfModule>
