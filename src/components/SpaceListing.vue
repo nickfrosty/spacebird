@@ -1,6 +1,6 @@
 <template>
 
-    <div class="" v-if="$store.state.searched == true && $store.state.loading == false && $store.state.spaces.length <= 0">
+    <div class="" v-if="$store.state.initialSearch == false && $store.state.searched == true && $store.state.loading == false && $store.state.spaces.length <= 0">
         <h3 class="text-lg font-semibold text-center">No Spaces were found...</h3>
     </div>
 

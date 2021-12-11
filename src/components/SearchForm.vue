@@ -38,6 +38,8 @@
                     text: this.$store.state.searchText,
                 };
 
+                this.$store.dispatch('setInitialSearch', false);
+
                 // async call for the 'searchSpaces' action using the searchQuery
                 this.$store.dispatch('searchSpaces', searchQuery);
                 

@@ -16,7 +16,14 @@ app.use(express.json());
 
 // set the allowable domains to make requests via CORS
 app.use(cors({
-    origin: '*'
+    // origin: '*'
+    origin: [
+        // 'http://localhost:3000', 
+        'https://www.spacebird.io', 
+        'https://spacebird.io',
+        'https://www.spacebird.io/', 
+        'https://spacebird.io/'
+    ]
 }));
 
 // inistialize the NODE server

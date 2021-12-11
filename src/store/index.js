@@ -50,6 +50,7 @@ import { createStore } from 'vuex';
 
 export default createStore({
   state: {
+    initialSearch: false,
     searched: false,
     searchText: '',
     responseText: '',
@@ -58,6 +59,9 @@ export default createStore({
     users: [],
   },
   mutations: {
+    setInitialSearch (state, value){
+      state.setInitialSearch = value;
+    },
     setLoading (state, loading){
       state.loading = loading;
       state.searched = true;
