@@ -60,7 +60,7 @@ export default createStore({
   },
   mutations: {
     setInitialSearch (state, value){
-      state.setInitialSearch = value;
+      state.initialSearch = value;
     },
     setLoading (state, loading){
       state.loading = loading;
