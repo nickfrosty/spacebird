@@ -19,7 +19,9 @@ app.use(cors({
     // origin: '*'
     origin: [
         // 'http://localhost:3000', 
-        'https://www.spacebird.io', 
+        'https://www.spacebird.io*',
+        'https://www.spacebird.io',
+        'https://spacebird.io*',
         'https://spacebird.io',
         'https://www.spacebird.io/', 
         'https://spacebird.io/'
